@@ -3,6 +3,24 @@
 bundle:
   name: agent_harness_lab
 
+include:
+  - resources/*.yml
+
+variables:
+  ano:
+    description: "Ano a carregar (vazio = o mais recente do catálogo)"
+    default: ""
+  catalogo:
+    default: workspace
+  schema:
+    default: samantha_contratos_pt
+  volume:
+    default: contratos_raw
+  tabela:
+    default: bronze_contratos
+  dataset_id:
+    default: 66d72d488ca4b7cb2de28712
+
 targets:
   dev:
     mode: development

@@ -1,6 +1,7 @@
 [tool.ruff]
 line-length = 100
 extend-exclude = [".claude", ".github/skills", ".github/agents", ".github/prompts"]
+builtins = ["spark", "dbutils"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]

@@ -44,6 +44,10 @@ flowchart LR
 
 Genie Code reads skills from the workspace. Whether it can read this repository's folders directly is `unverified`; test it (lab 03).
 
+## Bronze: public contracts (US01)
+
+One year of the IMPIC public contracts dataset (dados.gov.pt, Portal BASE) lands in `workspace.samantha_contratos_pt.bronze_contratos` (dev). One row per contract, all fields as text, plus five metadata columns (`_source_url`, `_source_modified`, `_ingested_at`, `_file_sha256`, `_source_year`). The zip is kept in the Volume `contratos_raw` with its publication date; the staging files are cleaned up. Code: `src/us01/`. Job: `resources/us01_bronze.yml` (notebook `notebooks/us01_bronze_contratos.py`, check `notebooks/check_us01_contagem.py`). Details and dev results: `docs/specs/US01-contratos-bronze.md`.
+
 ## The improvement loop
 
 ```mermaid
