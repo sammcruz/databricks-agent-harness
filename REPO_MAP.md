@@ -34,6 +34,7 @@ Grouped by tool. Delete the groups you do not use.
 | core | `self-improvement` | The error log, learnings and the improvement loop |
 | core | `repo-orientation` | How to find your way around this repository |
 | core | `write-contract` | Dry-run-first rule for anything that writes |
+| core | `handoff-prompt` | Write a prompt for another agent in another fork or workspace |
 | databricks | `databricks-cli-auth` | Install the CLI, OAuth login, profiles |
 | databricks | `databricks-free-edition` | What works and what does not on Free Edition |
 | databricks | `databricks-sql-query` | Read-only SQL on the warehouse, system tables |
