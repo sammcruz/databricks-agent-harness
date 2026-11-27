@@ -26,7 +26,7 @@ class Done:
 @pytest.fixture
 def fake_tools(monkeypatch, tmp_path):
     """Pretend every tool is installed unless a test removes it from `missing`."""
-    state = {"missing": set()}
+    state = {"missing": set(), "executables": []}
     # Empty home, so a real ~/.local/bin/specify on this machine cannot leak in.
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("USERPROFILE", str(tmp_path))
@@ -35,6 +35,7 @@ def fake_tools(monkeypatch, tmp_path):
         return None if name in state["missing"] else "/fake/bin/" + name
 
     def fake_run(command, **kwargs):
+        state["executables"].append(command[0])
         name = Path(command[0]).name
         if name == "uv":
             return Done(returncode=0)  # `uv python find >=3.11` succeeds
@@ -85,6 +86,9 @@ def test_spec_kit_found_in_local_bin_when_not_on_path(fake_tools, capsys, monkey
     out = capsys.readouterr().out
     assert re.search(r"^Spec Kit\s+ok\s+0\.1\.0$", out, re.MULTILINE)
     assert "Needs attention" not in out
+    # The script must run the local-bin path, not the bare name "specify".
+    assert str(tmp_path / ".local" / "bin" / "specify") in fake_tools["executables"]
+    assert "specify" not in fake_tools["executables"]
 
 
 def test_output_never_shows_token_like_strings(fake_tools, capsys, monkeypatch):
