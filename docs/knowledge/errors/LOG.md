@@ -32,3 +32,11 @@ Entry template:
 - Prevention: `skills/core/environment-setup` and `INIT.md` now ask to refresh PATH in the student's terminal, or restart VS Code, before any login.
 - Status: open
 - Seen: 1
+
+## 2026-11-27 15:10 · scripts (system_tables_readable) · open
+- Symptom: `python scripts/system_tables_readable.py --show-statements` fails with `ModuleNotFoundError: No module named 'scripts'`, because the script imports `scripts.dbquery` and running a file directly puts `scripts/` on the path, not the repo root.
+- Cause: a script in `scripts/` that imports a sibling module through the `scripts` package.
+- Fix: run it as a module from the repo root: `python -m scripts.system_tables_readable`. The docstring shows this.
+- Prevention: not yet in a skill. Scripts in `scripts/` that import each other must be run with `python -m scripts.<name>`; the skill that documents the script should say so.
+- Status: open
+- Seen: 1

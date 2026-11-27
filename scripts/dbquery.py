@@ -60,6 +60,15 @@ def check_read_only(sql):
     return None
 
 
+def build_command(sql, profile="free", output="json"):
+    """Return the Databricks CLI command that runs one statement. The SQL goes after `--`."""
+    return [
+        "databricks", "experimental", "aitools", "tools", "query",
+        "--profile", profile, "--output", output,
+        "--", sql.strip(),
+    ]  # fmt: skip
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Run one read-only SQL statement.")
     source = parser.add_mutually_exclusive_group(required=True)
@@ -75,11 +84,7 @@ def main(argv=None):
         print("Refused: {}.".format(reason), file=sys.stderr)
         return 2
 
-    command = [
-        "databricks", "experimental", "aitools", "tools", "query",
-        "--profile", args.profile, "--output", args.output,
-        "--", sql.strip(),
-    ]  # fmt: skip
+    command = build_command(sql, args.profile, args.output)
     try:
         return subprocess.run(command).returncode
     except FileNotFoundError:
