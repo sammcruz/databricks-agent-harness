@@ -28,7 +28,11 @@ tabela = f"{catalogo}.{schema}.{dbutils.widgets.get('tabela')}"
 ano_texto = dbutils.widgets.get("ano").strip()
 raiz_contratos = Path(f"/Volumes/{catalogo}/{schema}/{volume}/contratos")
 # Empty year: check the latest year folder stored in the Volume.
-ano = int(ano_texto) if ano_texto else max(int(p.name) for p in raiz_contratos.iterdir() if p.is_dir())
+ano = (
+    int(ano_texto)
+    if ano_texto
+    else max(int(p.name) for p in raiz_contratos.iterdir() if p.is_dir())
+)
 
 # COMMAND ----------
 
@@ -44,7 +48,8 @@ independente = contar_independente(zip_guardado)
 # COMMAND ----------
 
 linhas_bronze = spark.sql(
-    f"SELECT COUNT(*) AS n, COUNT(DISTINCT idcontrato) AS distintos FROM {tabela} WHERE _source_year = '{ano}'"
+    "SELECT COUNT(*) AS n, COUNT(DISTINCT idcontrato) AS distintos "
+    f"FROM {tabela} WHERE _source_year = '{ano}'"
 ).first()
 nulos_meta = spark.sql(
     f"""

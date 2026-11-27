@@ -8,7 +8,8 @@ import json
 import sys
 from pathlib import Path
 
-# The bundle syncs the repo; this notebook sits in <repo>/notebooks/, so the repo root is two levels up.
+# The bundle syncs the repo; this notebook sits in <repo>/notebooks/,
+# so the repo root is two levels up.
 _nb = dbutils.notebook.entry_point.getDbutils().notebook().getContext().notebookPath().get()
 sys.path.insert(0, "/Workspace" + str(Path(_nb).parent.parent))
 
