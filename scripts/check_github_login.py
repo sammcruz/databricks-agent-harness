@@ -39,6 +39,7 @@ def run(command, discard=False):
         "errors": "replace",
     }
     if discard:
+        kwargs["stdin"] = subprocess.DEVNULL
         kwargs["stdout"] = subprocess.DEVNULL
         kwargs["stderr"] = subprocess.DEVNULL
     else:
@@ -51,14 +52,30 @@ def run(command, discard=False):
     return done.returncode, done.stdout or ""
 
 
-def has_scope(text, scope):
-    """True if a "Token scopes" line of `gh auth status` lists the scope."""
+def active_token_scopes(text):
+    """Scopes of the active gh account, or None if the active account cannot be determined.
+
+    `gh auth status` prints one block per account, each starting with a "Logged in to" line.
+    Only the block marked "Active account: true" counts; scopes on other accounts are ignored.
+    """
+    blocks = []
     for line in text.splitlines():
-        if "Token scopes" in line:
-            names = set(re.findall(r"[A-Za-z0-9_:.-]+", line.partition(":")[2]))
-            if scope in names:
-                return True
-    return False
+        if "Logged in to" in line:
+            blocks.append({"active": None, "scopes": set()})
+        elif blocks and "Active account:" in line:
+            blocks[-1]["active"] = line.partition(":")[2].strip().lower() == "true"
+        elif blocks and "Token scopes" in line:
+            blocks[-1]["scopes"] = set(re.findall(r"[A-Za-z0-9_:.-]+", line.partition(":")[2]))
+    active = [block for block in blocks if block["active"] is True]
+    if len(active) != 1:
+        return None
+    return active[0]["scopes"]
+
+
+def has_scope(text, scope):
+    """True if the active gh account's token lists the scope. Other accounts are ignored."""
+    scopes = active_token_scopes(text)
+    return scopes is not None and scope in scopes
 
 
 def check_gh_login():
@@ -67,8 +84,10 @@ def check_gh_login():
         return Result("GitHub CLI login", False, "gh not found or did not run")
     if code != 0:
         return Result("GitHub CLI login", False, "gh is not logged in")
+    if active_token_scopes(out) is None:
+        return Result("GitHub CLI login", False, "could not tell the active gh account")
     if not has_scope(out, REQUIRED_GH_SCOPE):
-        return Result("GitHub CLI login", False, "token has no 'project' scope")
+        return Result("GitHub CLI login", False, "active account's token has no 'project' scope")
     return Result("GitHub CLI login", True, "logged in with 'project' scope")
 
 

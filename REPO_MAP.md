@@ -72,4 +72,4 @@ Grouped by tool. Delete the groups you do not use.
 
 ## Scripts
 
-- `scripts/check_environment.py` (read-only tool check), `scripts/dbquery.py` (read-only SQL), `scripts/publish_backlog.py` (backlog to issues), `scripts/board.py` (agile board), `scripts/sync_agent_folders.py`, `scripts/check_repo_map.py`, `scripts/quick_validate.py`.
+- `scripts/check_environment.py` (read-only tool check), `scripts/check_github_login.py` (read-only GitHub and Databricks login check), `scripts/dbquery.py` (read-only SQL), `scripts/publish_backlog.py` (backlog to issues), `scripts/board.py` (agile board), `scripts/sync_agent_folders.py`, `scripts/check_repo_map.py`, `scripts/quick_validate.py`.

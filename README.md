@@ -16,6 +16,16 @@ Individual and hands-on: your VS Code, your Databricks Free Edition, your GitHub
 
 Todos os pedidos que pode fazer ao agente, antes e depois, estão no início do `INIT.md`.
 
+### Conferir os logins
+
+Para checar se os logins e o repositório padrão estão prontos, rode na raiz do projeto:
+
+```
+python3 scripts/check_github_login.py
+```
+
+Ele faz quatro checagens: login no GitHub CLI com a permissão `project` na conta ativa; login no Databricks (perfil `free`); repositório padrão do `gh` igual ao deste projeto; e nenhum token escrito nos arquivos do repositório. Ele é somente leitura e não mostra tokens nem dados de conta. Sai com código 0 se tudo passou e 1 se algo falhou.
+
 ## What is inside
 
 - `AGENTS.md`: the rules every agent follows, including the improvement protocol.

@@ -15,7 +15,36 @@ SENTINEL_DATABRICKS_OUTPUT = "sentinel-databricks-output-0001"
 GH_AUTH_OK = (
     "github.com\n"
     "  ✓ Logged in to github.com account sentinel-account (keyring)\n"
+    "  - Active account: true\n"
     "  - Token scopes: 'gist', 'project', 'read:org', 'repo'\n"
+)
+
+GH_AUTH_PROJECT_ONLY_ON_INACTIVE = (
+    "github.com\n"
+    "  ✓ Logged in to github.com account sentinel-active (keyring)\n"
+    "  - Active account: true\n"
+    "  - Token scopes: 'read:org', 'repo'\n"
+    "\n"
+    "  ✓ Logged in to github.com account sentinel-inactive (keyring)\n"
+    "  - Active account: false\n"
+    "  - Token scopes: 'project', 'repo'\n"
+)
+
+GH_AUTH_PROJECT_ON_ACTIVE = (
+    "github.com\n"
+    "  ✓ Logged in to github.com account sentinel-active (keyring)\n"
+    "  - Active account: true\n"
+    "  - Token scopes: 'project', 'repo'\n"
+    "\n"
+    "  ✓ Logged in to github.com account sentinel-inactive (keyring)\n"
+    "  - Active account: false\n"
+    "  - Token scopes: 'read:org'\n"
+)
+
+GH_AUTH_NO_ACTIVE_MARKER = (
+    "github.com\n"
+    "  ✓ Logged in to github.com account sentinel-account (keyring)\n"
+    "  - Token scopes: 'project', 'repo'\n"
 )
 
 
@@ -60,7 +89,10 @@ def test_all_checks_pass_exits_zero(fake_gh, capsys):
 
 def test_gh_token_without_project_scope_fails(fake_gh, capsys):
     fake_gh["responses"]["gh auth"] = Done(
-        "  - Token scopes: 'gist', 'read:org', 'repo'\n", 0
+        "  ✓ Logged in to github.com account sentinel-account (keyring)\n"
+        "  - Active account: true\n"
+        "  - Token scopes: 'gist', 'read:org', 'repo'\n",
+        0,
     )
 
     assert check_github_login.main() == 1
@@ -78,9 +110,40 @@ def test_gh_not_logged_in_fails(fake_gh, capsys):
     assert "gh is not logged in" in capsys.readouterr().out
 
 
+def test_project_scope_only_on_non_active_account_fails(fake_gh, capsys):
+    fake_gh["responses"]["gh auth"] = Done(GH_AUTH_PROJECT_ONLY_ON_INACTIVE, 0)
+
+    assert check_github_login.main() == 1
+
+    out = capsys.readouterr().out
+    gh_line = [line for line in out.splitlines() if line.startswith("GitHub CLI login")][0]
+    assert "fail" in gh_line
+    assert "no 'project' scope" in gh_line
+    assert "sentinel-inactive" not in out
+
+
+def test_project_scope_on_active_account_passes(fake_gh, capsys):
+    fake_gh["responses"]["gh auth"] = Done(GH_AUTH_PROJECT_ON_ACTIVE, 0)
+
+    assert check_github_login.main() == 0
+    assert "All GitHub and Databricks checks passed." in capsys.readouterr().out
+
+
+def test_active_account_undetermined_fails(fake_gh, capsys):
+    fake_gh["responses"]["gh auth"] = Done(GH_AUTH_NO_ACTIVE_MARKER, 0)
+
+    assert check_github_login.main() == 1
+    assert "could not tell the active gh account" in capsys.readouterr().out
+
+
 def test_project_scope_name_inside_another_scope_does_not_count(fake_gh, capsys):
     # "read:project" is a different scope; it must not satisfy the check.
-    fake_gh["responses"]["gh auth"] = Done("  - Token scopes: 'read:project', 'repo'\n", 0)
+    fake_gh["responses"]["gh auth"] = Done(
+        "  ✓ Logged in to github.com account sentinel-account (keyring)\n"
+        "  - Active account: true\n"
+        "  - Token scopes: 'read:project', 'repo'\n",
+        0,
+    )
 
     assert check_github_login.main() == 1
     assert "no 'project' scope" in capsys.readouterr().out
@@ -121,6 +184,28 @@ def test_databricks_output_is_discarded_on_success(fake_gh, capsys):
     assert kwargs["stdout"] == subprocess.DEVNULL
     assert kwargs["stderr"] == subprocess.DEVNULL
     assert SENTINEL_DATABRICKS_OUTPUT not in capsys.readouterr().out
+
+
+def test_databricks_call_does_not_read_stdin(fake_gh):
+    check_github_login.main()
+
+    databricks_kwargs = [
+        kwargs for command, kwargs in fake_gh["calls"] if command[0] == "databricks"
+    ]
+    assert len(databricks_kwargs) == 1
+    assert databricks_kwargs[0]["stdin"] == subprocess.DEVNULL
+
+
+def test_timeout_fails_cleanly_without_traceback(fake_gh, capsys):
+    fake_gh["responses"]["gh auth"] = subprocess.TimeoutExpired(["gh", "auth", "status"], 60)
+
+    assert check_github_login.main() == 1
+
+    out = capsys.readouterr().out
+    gh_line = [line for line in out.splitlines() if line.startswith("GitHub CLI login")][0]
+    assert "fail" in gh_line
+    assert "gh not found or did not run" in gh_line
+    assert "Traceback" not in out
 
 
 def test_token_in_grep_result_fails_and_token_is_not_printed(fake_gh, capsys):
