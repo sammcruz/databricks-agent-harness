@@ -9,7 +9,10 @@ import subprocess
 
 import pytest
 
-from src.us01.bronze import COLUNAS_METADADOS, esquema_texto
+# The CI installs no pyspark; without it this whole module is skipped at collection.
+pytest.importorskip("pyspark")
+
+from src.us01.bronze import COLUNAS_METADADOS, esquema_texto  # noqa: E402
 
 java = pytest.mark.skipif(shutil.which("java") is None, reason="sem Java local (rodar no dev)")
 
