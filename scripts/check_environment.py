@@ -5,10 +5,12 @@ Works with old Python 3 versions on purpose: it runs before the setup is done.
 Exit code 1 means something is missing or too old.
 """
 
+import os
 import re
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 # (label, command, minimum version or None)
 TOOLS = [
@@ -19,14 +21,34 @@ TOOLS = [
     ("Spec Kit", ["specify", "version"], None),
 ]
 
+# `uv tool install` puts these in ~/.local/bin, which is often not on PATH yet.
+LOCAL_BIN_TOOLS = {"specify"}
+
 
 def parse_version(text):
     match = re.search(r"(\d+)\.(\d+)\.(\d+)", text)
     return tuple(int(part) for part in match.groups()) if match else None
 
 
+def find_local_bin(name):
+    """Path of `name` in ~/.local/bin, or None. Does not change PATH."""
+    names = [name + ".exe", name] if os.name == "nt" else [name]
+    for file_name in names:
+        candidate = Path.home() / ".local" / "bin" / file_name
+        if candidate.is_file() and os.access(str(candidate), os.X_OK):
+            return str(candidate)
+    return None
+
+
+def find_tool(name):
+    path = shutil.which(name)
+    if path or name not in LOCAL_BIN_TOOLS:
+        return path
+    return find_local_bin(name)
+
+
 def check(command, minimum):
-    path = shutil.which(command[0])
+    path = find_tool(command[0])
     if not path:
         return "missing", ""
     try:
