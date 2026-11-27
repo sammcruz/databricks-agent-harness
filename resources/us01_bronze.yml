@@ -1,0 +1,39 @@
+# US01: one serverless job for the year load (bronze) and its independent check. Dev target only.
+resources:
+  jobs:
+    us01_bronze_contratos:
+      name: us01_bronze_contratos
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            client: "2"
+        - environment_key: check
+          spec:
+            client: "2"
+            dependencies:
+              - ijson
+      tasks:
+        - task_key: carregar_ano
+          environment_key: default
+          notebook_task:
+            notebook_path: ../notebooks/us01_bronze_contratos.py
+            base_parameters:
+              ano: ${var.ano}
+              catalogo: ${var.catalogo}
+              schema: ${var.schema}
+              volume: ${var.volume}
+              tabela: ${var.tabela}
+              dataset_id: ${var.dataset_id}
+        - task_key: contar_independente
+          depends_on:
+            - task_key: carregar_ano
+          environment_key: check
+          notebook_task:
+            notebook_path: ../notebooks/check_us01_contagem.py
+            base_parameters:
+              ano: ${var.ano}
+              catalogo: ${var.catalogo}
+              schema: ${var.schema}
+              volume: ${var.volume}
+              tabela: ${var.tabela}
