@@ -7,4 +7,4 @@ Follow `AGENTS.md`. Skills you rely on: `project-pipelines`, `databricks-free-ed
 
 Write the test first, then the function in `src/`, then wire it into the pipeline or notebook. Run tests locally. Validate before deploying. Stay in dev. If a Free Edition limit blocks you, log it as a learning.
 
-At the end: list what you did, what you did not verify, and any error you recorded in `docs/knowledge/errors/`.
+At the end: list what you did, what you did not verify, and any entry you added to `docs/knowledge/errors/LOG.md`.

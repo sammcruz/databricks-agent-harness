@@ -19,6 +19,35 @@ Status: `verified` on one GitHub user project (2026-11-27): setup, view, a move 
 | In Review | Pull request | `reviewer` | **Person approves and merges** |
 | Done | Merged | none (GitHub or a person) | |
 
+## Coordinating a story
+
+Status: `unverified`. The full path with subagents has not been run.
+
+The main agent (the one talking to the user) coordinates. **Only the coordinator moves cards.** Subagents do their part and report back; say so when you call them, and give them the issue text, the approved decisions and the limits (dev only, which writes are approved). A subagent cannot ask the user or approve anything: bring its questions and results to the user.
+
+Pick the builder by what the story changes. Use more than one when needed.
+
+| Story is about | Builder |
+|---|---|
+| Ingestion, bronze, silver, gold, expectations, jobs | `pipeline-engineer` |
+| Notebooks, Python modules, environment checks | `notebook-engineer` |
+| Dashboards and monitoring | `dashboard-engineer` |
+| The consumer app | `app-engineer` |
+| Documentation | `docs-writer` |
+| Deployment automation | `pipeline-engineer` |
+
+For each stage: move the card, run `status` to confirm, tell the user the column and the agent, then call that agent by name.
+
+| Path | Stages and agents |
+|---|---|
+| **Code** | Refinement (`requirements-analyst`), approval of the story, Ready, Spec (builder; documents only, no code), approval of plan and tasks, In Progress (builder, on a branch, tests first), Testing (builder runs tests and lint; `data-analyst` for data criteria), pull request after a yes, In Review (`reviewer`), the user merges |
+| **No code** (a check or setup story) | Refinement (`requirements-analyst`), approval of the story, Ready, In Progress (builder), Testing (builder, `data-analyst` if needed), In Review (`reviewer` checks the evidence), the user moves it to Done and closes it |
+| **Bug** | As in the `fix-bug` prompt: Refinement (reproduce), approval, Ready, In Progress (failing test first), Testing, In Review |
+
+- If a no-code story turns out to need file changes, tell the user and switch to the code path before changing anything.
+- If you cannot call a subagent (tool or editor without them), say so, ask whether to do that stage yourself or let the user pick the agent, and never report that an agent worked when it did not.
+- If a stage fails or is blocked, do not advance. Report it.
+
 ## Definition of Ready (Refinement to Ready)
 
 Who, what and why; acceptance criteria a test can check; dependencies listed; small enough for one branch; open questions answered or explicitly left for `clarify`.
@@ -32,7 +61,7 @@ python scripts/board.py move --repo <owner>/<fork> --issue <number> --to "In Pro
 
 - Move the card when the stage **starts**, so the board shows what is happening now. Say that you moved it.
 - Moving a card on the user's own board along this flow does not need a separate yes. The three approvals in bold do: ask, and wait for an explicit yes before moving past them. The script cannot check this for you.
-- Never move to Done and never close the issue by hand: the merge does it (`Closes #<number>` in the pull request).
+- Agents never move to Done and never close the issue: the merge does it (`Closes #<number>` in the pull request). For a story with no pull request, the user does it.
 - One issue at a time per person between Spec and Testing.
 - Entering Spec or In Progress assigns the issue to the user. If it belongs to someone else, stop.
 - Going back is normal: failed test or review comment goes to In Progress; unclear requirement goes to Refinement. Add a comment saying why (`gh issue comment`, show the text first).

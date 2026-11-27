@@ -25,7 +25,7 @@ Depois de inicializar:
 |---|---|
 | Ver o quadro | `Mostre o estado do quadro.` |
 | Refinar uma história | `Use o requirements-analyst para refinar a issue #N.` |
-| Implementar uma história | `/start-story N` ou `Implemente a user story da issue #N seguindo o fluxo do quadro.` |
+| Implementar uma história (o agente coordena os agentes e move o cartão) | `/start-story N` ou `Siga o prompt start-story para a issue #N.` |
 | Corrigir um bug | `/fix-bug N` |
 | Ver se está tudo a funcionar | `/doctor` |
 | Rever as instruções do harness | `/check-harness` |
@@ -44,7 +44,7 @@ O fork de um repositório público também é público. Nunca grave credenciais,
 2. Antes de começar, verifique tudo sem alterar nada e mostre um plano único: o que já está feito, o que vai instalar ou criar e onde. Espere um "sim". Peça novo "sim" se o plano mudar.
 3. Os logins e autorizações no navegador são do aluno. Nunca peça, mostre ou grave tokens.
 4. Se algo estiver bloqueado, pare e explique. Não contorne bloqueios (skill `environment-setup`).
-5. Registe cada falha em `docs/knowledge/errors/`, um ficheiro por problema (skill `self-improvement`).
+5. Registe cada falha em `docs/knowledge/errors/LOG.md`.
 6. Não faça commit nem push durante a inicialização.
 
 ## Passo 1: ferramentas
@@ -52,6 +52,18 @@ O fork de um repositório público também é público. Nunca grave credenciais,
 Siga a skill `environment-setup`, secções 1 e 2.
 
 **Verificação:** `python3 scripts/check_environment.py` (Windows: `py scripts/check_environment.py`) mostra tudo `ok`. O verificador também encontra o Spec Kit em `~/.local/bin` (instalação com `uv tool install`), mesmo que essa pasta não esteja no PATH.
+
+**No Windows:** um terminal que já estava aberto não vê as ferramentas acabadas de instalar, e atualizar o PATH no terminal do agente **não muda o do aluno**. Depois de as instalações terminarem e **antes de qualquer login**:
+
+1. O aluno corre no seu terminal PowerShell:
+   ```
+   $env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")
+   gh --version
+   ```
+2. Se `gh` continuar sem ser reconhecido, fechar **todas** as janelas do VS Code, voltar a abrir e testar num terminal novo. Se não resolver, reiniciar o computador.
+3. Se ainda falhar, siga a secção "Windows: refresh PATH" da skill `environment-setup`.
+
+Só avance para os logins quando os comandos funcionarem no terminal do aluno.
 
 ## Passo 2: ambiente Python e dependências
 

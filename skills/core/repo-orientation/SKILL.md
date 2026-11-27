@@ -8,5 +8,5 @@ description: Use at the start of a session or when you are unsure where somethin
 1. Read `REPO_MAP.md`. It lists every agent, skill and prompt and says when to use each.
 2. Pick the skill whose description matches the task. Open its `SKILL.md` and follow it.
 3. Source folders: `skills/<group>/<name>/`, `agents/`, `prompts/`. Generated copies live in `.claude/` and `.github/`. Never edit the generated copies.
-4. Knowledge: `docs/knowledge/` (errors, decisions, learnings). Read the open errors in `docs/knowledge/errors/` before starting work that touches the same area.
+4. Knowledge: `docs/knowledge/` (errors, decisions, learnings). Read the open entries in `docs/knowledge/errors/LOG.md` before starting work that touches the same area.
 5. If a folder under `skills/` is missing a tool you need (for example `fabric`), the user deleted it on purpose. Do not recreate it.

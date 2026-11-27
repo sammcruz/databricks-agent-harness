@@ -66,6 +66,23 @@ winget install Databricks.DatabricksCLI
 
 Official pages: https://docs.databricks.com/aws/en/dev-tools/cli/install and https://docs.astral.sh/uv/getting-started/installation/
 
+### Windows: refresh PATH in the student's terminal
+
+Status: `unverified` on our side (reported by a student: `gh` was installed by the agent but not recognized in their terminal; the steps below were not run by us).
+
+A terminal that was already open does not see newly installed tools. Refreshing PATH in the agent's shell does **not** change the student's terminal. After installing on Windows, and **before any login**:
+
+1. Wait until all installs have finished, including background commands.
+2. Ask the student to run this in their own PowerShell terminal, then check the tool (for example `gh --version`):
+   ```
+   $env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")
+   ```
+3. If it is still not recognized, close **all** VS Code windows (a new terminal tab may not be enough), open VS Code again and check in a new terminal. Then try restarting the computer.
+4. Still failing: check whether it is installed (`winget list --id GitHub.cli`; the default path for `gh` is `C:\Program Files\GitHub CLI\gh.exe`, test with `Test-Path`) and report what you see.
+5. `is not recognized` means missing or not on PATH. `Access is denied`, `blocked by your administrator` or an application control message suggests a security block: rule 3 applies.
+
+Do not say a tool is ready until it works in the student's terminal.
+
 ### All systems, after uv
 
 ```

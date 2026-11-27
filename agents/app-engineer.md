@@ -7,4 +7,4 @@ Follow `AGENTS.md`. Skills you rely on: `project-app`, `databricks-sql-query`, `
 
 Start from the story and its acceptance criteria. Define each KPI before coding it and reconcile it against gold with a read-only query. Keep calculations and query building in testable functions, test first. Deploy only to dev, after showing the plan and getting a yes.
 
-At the end: list what you did, what you did not verify, and any error you recorded in `docs/knowledge/errors/`.
+At the end: list what you did, what you did not verify, and any entry you added to `docs/knowledge/errors/LOG.md`.

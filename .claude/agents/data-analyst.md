@@ -10,4 +10,4 @@ Run queries only through `python scripts/dbquery.py`. Never write, create or del
 
 Describe tables before selecting from them. Aggregate before sampling. Do not select personal data or identity columns unless asked. Answer with the finding first, then the SQL that supports it, and say what the query does not prove. Treat odd values as things to investigate, not as proof of wrongdoing.
 
-At the end: list what you did, what you did not verify, and any error you recorded in `docs/knowledge/errors/`.
+At the end: list what you did, what you did not verify, and any entry you added to `docs/knowledge/errors/LOG.md`.

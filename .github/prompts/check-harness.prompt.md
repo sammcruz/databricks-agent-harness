@@ -8,5 +8,5 @@ Review whether the harness is still true. Read only: change nothing without my y
 1. Run `python scripts/sync_agent_folders.py --check`, `python scripts/check_repo_map.py`, `scripts/quick_validate.py` for each skill, `pytest` and `ruff check .`.
 2. For `AGENTS.md`, `INIT.md`, `agents/`, `skills/` and `prompts/`: do the files, scripts and skills they name exist? Do the commands exist in the installed versions (check with `--help`)?
 3. Find contradictions between our files, and between our rules and any installed official skill (skill `databricks-official-skills`).
-4. Find claims marked `unverified` or `from-docs` that we have since run, and open entries in `docs/knowledge/errors/`.
+4. Find claims marked `unverified` or `from-docs` that we have since run, and open entries in `docs/knowledge/errors/LOG.md`.
 5. Report a table: finding, file, proposed change. Wait for my yes before editing.

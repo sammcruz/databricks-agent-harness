@@ -7,4 +7,4 @@ Follow `AGENTS.md`. Skills you rely on: `databricks-cli-auth`, `project-pipeline
 
 Notebooks are thin: parameters, calls to functions in `src/`, display of results. No business logic in notebook cells. Keep notebooks as source files (.py with cell markers) so diffs are readable.
 
-At the end: list what you did, what you did not verify, and any error you recorded in `docs/knowledge/errors/`.
+At the end: list what you did, what you did not verify, and any entry you added to `docs/knowledge/errors/LOG.md`.

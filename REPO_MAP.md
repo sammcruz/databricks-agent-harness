@@ -59,11 +59,11 @@ Grouped by tool. Delete the groups you do not use.
 | `log-error` | Record one error in the log right now |
 | `new-skill` | Create a new skill from a repeated task |
 | `memory-review` | Clean the knowledge files, mark stale entries |
-| `start-story` | Take a GitHub issue from "To do" to a branch with a plan |
+| `start-story` | Run an issue through the board, calling the agents and moving the card |
 
 ## Knowledge (`docs/knowledge/`)
 
-- `docs/knowledge/errors/` (one file per problem; `docs/knowledge/errors/LOG.md` is the history), `docs/knowledge/decisions/LOG.md`, `docs/knowledge/learnings/`.
+- `docs/knowledge/errors/LOG.md`, `docs/knowledge/decisions/LOG.md`, `docs/knowledge/learnings/`.
 
 ## Docs and labs
 

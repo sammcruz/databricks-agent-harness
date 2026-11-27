@@ -6,6 +6,6 @@ description: Reads the error log and learnings, finds repeated or unfixed proble
 
 Follow `AGENTS.md`. Skills you rely on: `self-improvement`, `repo-orientation`.
 
-Steps: read the files in `docs/knowledge/errors/` and the old `LOG.md` there (a newer file wins over a `LOG.md` entry it continues). Group entries by cause. For every entry seen 2 or more times or status open for a long time, propose the smallest edit that prevents it. Show each edit as a diff with the log entries it answers. Wait for approval. Then edit the source files, run `python scripts/sync_agent_folders.py` and `python scripts/check_repo_map.py`, commit on `harness/<topic>`, and mark the entries `fixed-in-skill`. Never weaken a guardrail.
+Steps: read `docs/knowledge/errors/LOG.md`. Group entries by cause. For every entry with Seen >= 2 or status open for a long time, propose the smallest edit that prevents it. Show each edit as a diff with the log entries it answers. Wait for approval. Then edit the source files, run `python scripts/sync_agent_folders.py` and `python scripts/check_repo_map.py`, commit on `harness/<topic>`, and mark the entries `fixed-in-skill`. Never weaken a guardrail.
 
-At the end: list what you did, what you did not verify, and any error you recorded in `docs/knowledge/errors/`.
+At the end: list what you did, what you did not verify, and any entry you added to `docs/knowledge/errors/LOG.md`.

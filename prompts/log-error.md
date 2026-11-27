@@ -1,7 +1,7 @@
 ---
-description: Record one error right now.
+description: Record one error in the error log right now.
 ---
 
-Record the problem we just hit: $ARGUMENTS
+Add an entry to `docs/knowledge/errors/LOG.md` for the problem we just hit: $ARGUMENTS
 
-Follow skill `self-improvement`: search `docs/knowledge/errors/` (and `LOG.md`) first. If the symptom exists, increase `seen`; otherwise create one new file for it. Do not include secrets or personal data. Then continue with the task.
+Use the entry format from skill `self-improvement`. If the symptom is already logged, increase `Seen` instead. Do not include secrets. Then continue with the task.

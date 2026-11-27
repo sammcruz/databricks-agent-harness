@@ -36,7 +36,7 @@ You can and should query Databricks to check facts instead of guessing: use skil
 
 You are expected to make this harness better every time you use it. The full protocol is in skill `self-improvement`. The short version:
 
-- When a command fails, a skill is wrong or missing, or the user corrects you: create one file for it in `docs/knowledge/errors/` before you continue. Use the format in skill `self-improvement`.
+- When a command fails, a skill is wrong or missing, or the user corrects you: append an entry to `docs/knowledge/errors/LOG.md` before you continue. Use the entry format in that file.
 - When you learn something reusable (a working command, a Free Edition limit, a gotcha): add it to `docs/knowledge/learnings/` or to the relevant skill.
 - When the same error appears twice in the log, stop and fix the cause: edit the skill, agent or this file. Propose the edit as a diff and wait for approval, then commit it on its own branch.
 - At the end of every task, run the checklist in `prompts/retro.md` (or tell the user to run `/retro`).
@@ -44,7 +44,7 @@ You are expected to make this harness better every time you use it. The full pro
 
 ## Memory
 
-- Errors: `docs/knowledge/errors/`, one file per problem. `LOG.md` there is history: read it, do not add to it.
+- Errors: `docs/knowledge/errors/LOG.md` (append only).
 - Decisions: `docs/knowledge/decisions/LOG.md` (append only).
 - Learnings: `docs/knowledge/learnings/<topic>.md` (one file per topic).
 - If the team uses a shared knowledge repository, see `docs/shared-memory.md`. Propose notes there by pull request; do not push directly.
