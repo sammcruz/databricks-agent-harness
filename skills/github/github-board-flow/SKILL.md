@@ -67,3 +67,4 @@ python scripts/board.py move --repo <owner>/<fork> --issue <number> --to "In Pro
 - Blocked: add the label `blocked` and a comment with the reason; keep the card where it is (ask first).
 - Bugs: Refinement means reproducing it; then Ready, and In Progress directly (no Spec column) with a failing test first.
 - If a move fails, say so and log it. Do not edit the board in another way to force it.
+- A move that prints success is not proof. Run `status` after it; if the card is elsewhere, repeat the move once and log it.

@@ -23,6 +23,7 @@ For product syntax and options use the official skill `databricks-pipelines` (se
 - Add data quality checks (expectations) for keys, nulls and ranges. A failing check must be visible, not silent.
 - Name tables `<layer>_<entity>`, for example `silver_orders`.
 - Do not hardcode catalog or schema. Take them from a bundle variable or widget.
+- Notebooks use `spark` and `dbutils` as Databricks globals: keep `builtins = ["spark", "dbutils"]` in `pyproject.toml` so `ruff check .` passes. A test module that imports `pyspark` starts with `pytest.importorskip("pyspark")`, because the CI does not install it.
 - Write the table list and column meaning in `docs/` as you build, not at the end.
 
 ## Workflow

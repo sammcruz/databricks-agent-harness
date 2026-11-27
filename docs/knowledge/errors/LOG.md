@@ -47,7 +47,7 @@ Entry template:
 - Fix: use `python3` on macOS, or install a `python` alias. Not changed in this run.
 - Prevention: `docs/gotchas/databricks.md` or `environment-setup` should say which command the machine has (`python` or `python3`). Check with `python3 scripts/check_environment.py` first.
 - Status: open
-- Seen: 1
+- Seen: 2 (again in the US01 coordination: `/start-story` and the board skill say `python scripts/board.py`; `python3` was needed)
 
 ## 2026-11-28 · US01 probe · SystemExit reported as job SUCCESS
 - Symptom: a serverless one-off probe (`databricks jobs submit`) showed SUCCESS while its check had failed; `raise SystemExit(1)` was the only signal.
@@ -94,5 +94,45 @@ Entry template:
 - Cause: a shortcut; the file-change rule says new or changed files go through create and edit only.
 - Fix: none yet; the content is correct. Future edits use edit/create only.
 - Prevention: check the file-change rule before writing docs from bash.
+- Status: open
+- Seen: 1
+
+## 2026-11-27 · US01 coordination · `gh issue edit --body "$(cat <<'EOF' ...)"` failed
+- Symptom: editing the issue body with an inline heredoc inside `$(...)` failed in bash; the story text has parentheses.
+- Cause: the shell parsed the parentheses inside the command substitution.
+- Fix: write the body with the create tool to a session file and use `gh issue edit --body-file`. Worked.
+- Prevention: skill `github-issues-flow` and `write-contract` should say to use `--body-file` for issue and PR bodies.
+- Status: open
+- Seen: 1
+
+## 2026-11-27 · US01 coordination · `git stash` run by mistake in a chained command
+- Symptom: while listing worktrees, a `git stash -q` in the same command stashed the uncommitted error log, so it looked lost.
+- Cause: a leftover command in a chain; nothing asked for a stash. `git stash pop` restored it with no loss.
+- Fix: restored with `git stash pop` and checked `git status`.
+- Prevention: `AGENTS.md` or skill `github-pr-flow`: do not run `git stash`, `reset` or `checkout --` as a probe; use read-only `git` commands for inspection.
+- Status: open
+- Seen: 1
+
+## 2026-11-27 · board (scripts/board.py) · Testing move printed success but the card stayed In Progress
+- Symptom: `board.py move --to Testing --apply` printed `#2: In Progress -> Testing`, but a later move to In Review was refused with "from In Progress you can go to: Refinement, Spec, Testing", and `status` showed #2 In Progress. Repeating the move worked.
+- Cause: not found. The first move may not have persisted, or something moved the card back (unverified).
+- Fix: repeated the move and confirmed with `status`.
+- Prevention: skill `github-board-flow` says to confirm with `status` after every move; the coordinator must do that, not trust the move output. Check `scripts/board.py` if it repeats.
+- Status: open
+- Seen: 1
+
+## 2026-11-27 · US01 build · builder checked a subset; CI and `ruff check .` failed at PR time
+- Symptom: the builder reported ruff and pytest as passing, but `ruff check .` found 34 errors in the new notebooks (`spark` and `dbutils` undefined, 3 long lines) and the CI `quality` job failed (`ModuleNotFoundError: pyspark` while collecting `tests/test_us01_bronze.py`).
+- Cause: the builder ran ruff only on `src/us01` and its tests, and pytest in a venv that has `pyspark`; the CI installs only `pytest ruff pandas pyyaml`.
+- Fix: `builtins = ["spark", "dbutils"]` in `pyproject.toml`, three lines wrapped, and `pytest.importorskip("pyspark")` in the Spark test module. CI passed.
+- Prevention: skill `project-pipelines` and the PR template should require the same commands as the CI (`ruff check .`, `pytest` with only the CI packages) before commit.
+- Status: fixed in this story (the skill change is proposed)
+- Seen: 1
+
+## 2026-11-27 · coordination · handoff prompt named the repository and went stale
+- Symptom: the instruction prompt for another environment named the repository and the user's machine, and the user asked to remove the name because each person runs it in their own fork. The prompt also described an old state (draft spec, probes still to run) and made another agent rewrite the code and stop at a DNS error (`Temporary failure in name resolution`) in its workspace.
+- Cause: the prompt was written while the story was in progress and reused without checking the current state.
+- Fix: rewrote the prompt without names, pointing to the existing code, with a DNS diagnosis and stop rule.
+- Prevention: `docs/knowledge/learnings/` or a skill for handoff prompts: no repository, user or machine names; state what exists in the repo; refresh the state before resending.
 - Status: open
 - Seen: 1

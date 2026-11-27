@@ -23,6 +23,7 @@ If the user just cloned or forked this repository, or asks to initialize or set 
 5. Tests are the gate. Do not call a pipeline or function done until its tests pass. Do not delete or skip a test to make it pass.
 6. Small steps. One issue, one branch, one pull request. Commit messages say what changed and why.
 7. Say what you did not verify. Mark claims as `verified` (you ran it), `from-docs` (read in docs) or `unverified` (a guess).
+8. Commands. If `python` is not found, use `python3` (macOS). Inspect git only with read-only commands (`status`, `diff`, `log`); do not run `git stash`, `reset` or `checkout --` as a probe.
 
 ## The board
 

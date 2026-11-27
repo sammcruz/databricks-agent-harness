@@ -12,6 +12,7 @@ description: Use when committing, pushing, opening or updating a pull request, o
    - `python scripts/sync_agent_folders.py --check`
    - `python scripts/check_repo_map.py`
    - `python scripts/quick_validate.py skills/<group>/<name>` for each changed skill
+   - The CI installs only the packages in `ci.yml`. A test that needs another package (for example `pyspark`) must skip when it is missing (`pytest.importorskip`). Do not report "tests pass" from a venv that has more packages than the CI.
 3. Read `git diff` and `git status` before committing: no debug output, unrelated files, secrets or personal data.
 4. Commit small and often. Message: imperative sentence saying what and why.
 5. Push the branch and open a pull request in the user's fork (`--repo`). Fill every section of `.github/pull_request_template.md`, briefly. State honestly how AI was used.
