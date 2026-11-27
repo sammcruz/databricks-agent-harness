@@ -51,7 +51,7 @@ O fork de um repositório público também é público. Nunca grave credenciais,
 
 Siga a skill `environment-setup`, secções 1 e 2.
 
-**Verificação:** `python3 scripts/check_environment.py` (Windows: `py scripts/check_environment.py`) mostra tudo `ok`.
+**Verificação:** `python3 scripts/check_environment.py` (Windows: `py scripts/check_environment.py`) mostra tudo `ok`. O verificador também encontra o Spec Kit em `~/.local/bin` (instalação com `uv tool install`), mesmo que essa pasta não esteja no PATH.
 
 ## Passo 2: ambiente Python e dependências
 

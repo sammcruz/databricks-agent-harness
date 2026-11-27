@@ -24,9 +24,12 @@ class Done:
 
 
 @pytest.fixture
-def fake_tools(monkeypatch):
+def fake_tools(monkeypatch, tmp_path):
     """Pretend every tool is installed unless a test removes it from `missing`."""
     state = {"missing": set()}
+    # Empty home, so a real ~/.local/bin/specify on this machine cannot leak in.
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
 
     def fake_which(name):
         return None if name in state["missing"] else "/fake/bin/" + name
@@ -62,6 +65,26 @@ def test_missing_tool_exits_one_and_is_named(fake_tools, capsys, missing_command
     assert re.search(r"^" + re.escape(label) + r"\s+missing\s*$", out, re.MULTILINE)
     assert "Needs attention: " + label in out
     assert "All tools found" not in out
+
+
+def test_spec_kit_found_in_local_bin_when_not_on_path(fake_tools, capsys, monkeypatch, tmp_path):
+    local_bin = tmp_path / ".local" / "bin"
+    local_bin.mkdir(parents=True)
+    fake_specify = local_bin / "specify"
+    fake_specify.write_text("#!/bin/sh\necho 'specify 0.1.0'\n")
+    fake_specify.chmod(0o755)
+    # Only Spec Kit is off PATH; the other tools stay found.
+    monkeypatch.setattr(
+        check_environment.shutil,
+        "which",
+        lambda name: None if name == "specify" else "/fake/bin/" + name,
+    )
+
+    assert check_environment.main() == 0
+
+    out = capsys.readouterr().out
+    assert re.search(r"^Spec Kit\s+ok\s+0\.1\.0$", out, re.MULTILINE)
+    assert "Needs attention" not in out
 
 
 def test_output_never_shows_token_like_strings(fake_tools, capsys, monkeypatch):
