@@ -21,4 +21,4 @@ Keep stories small: one table, one function or one dashboard per issue.
 3. Post a short plan as a comment before coding, if the user agrees.
 4. Link the pull request with `Closes #<number>`.
 
-Creating or editing issues is a write: follow `write-contract` and show the text first.
+Creating or editing issues is a write: follow `write-contract` and show the text first. Write the body to a file with the create tool and pass it with `--body-file`; an inline `--body "$(cat <<'EOF' ...)"` breaks on parentheses.
