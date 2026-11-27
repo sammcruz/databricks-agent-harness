@@ -37,7 +37,8 @@ Status tags: **verified** = run in dev and the output was checked; **unverified*
 ## Retro of US01 (2026-11-27)
 
 - [verified] The same job reached `dados.gov.pt` and downloaded 71 MB from serverless in one Free Edition workspace. Last checked: 2026-11-27
-- [unverified] In another Free Edition workspace, a one-off serverless HEAD failed with `Temporary failure in name resolution` (reported by another agent; I did not see the run). Outbound DNS may differ between accounts or be temporary. Test `socket.getaddrinfo` for each host and repeat after a few minutes before stopping the story. Last checked: 2026-11-27
+- [from-docs] Free Edition limits outbound internet to a limited set of trusted domains (Databricks docs, "Free Edition limitations"). Last checked: 2026-11-27
+- [unverified] Reported by another agent in a student workspace (I did not see the runs): serverless `socket.getaddrinfo` resolved `pypi.org` and `github.com`, and failed with `Temporary failure in name resolution` for `dados.gov.pt`, `files.pythonhosted.org` and `example.com`, in two tries three minutes apart. So the DNS works and the allowed hosts differ by workspace. In my workspace `dados.gov.pt` resolved. Before a story that downloads from a host, test it with `socket.getaddrinfo` on serverless; a failure for that host alone is a missing allowlist, not a transient error. Last checked: 2026-11-27
 - [verified] Notebooks use `spark` and `dbutils` as Databricks globals; ruff needs `builtins = ["spark", "dbutils"]` in `pyproject.toml`. Last checked: 2026-11-27
 - [verified] `pytest.importorskip("pyspark")` skips a module only when the error is `ModuleNotFoundError` (what the CI raises). A plain `ImportError` stops collection. Last checked: 2026-11-27
 - [verified] The CI installs only `pytest ruff pandas pyyaml`; a test that imports `pyspark` must skip without it. Last checked: 2026-11-27
